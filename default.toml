@@ -23,16 +23,6 @@ enabled = true
 ##
 
 [[stack]]
-name = "adguard"
-[stack.config]
-server = "coordinator"
-run_directory = "coordinator/adguard"
-file_paths = ["compose.yaml"]
-repo = "Hugo-Persson/HomeLab"
-
-##
-
-[[stack]]
 name = "authelia"
 [stack.config]
 server = "coordinator"
@@ -191,7 +181,7 @@ params = {}
 ##
 
 [[resource_sync]]
-name = "homelab-repo"
+name = "komodo-resource-sync"
 [resource_sync.config]
 repo = "hugo-persson/homelab-komodo-resources"
 git_account = "hugo-persson"
