@@ -23,11 +23,23 @@ enabled = true
 ##
 
 [[stack]]
+name = "adguard"
+[stack.config]
+server = "coordinator"
+run_directory = "coordinator/adguard"
+file_paths = ["compose.yaml"]
+git_account = "hugo-persson"
+repo = "Hugo-Persson/HomeLab"
+
+##
+
+[[stack]]
 name = "authelia"
 [stack.config]
 server = "coordinator"
 run_directory = "coordinator/authelia"
 file_paths = ["docker-compose.yml"]
+git_account = "hugo-persson"
 repo = "Hugo-Persson/HomeLab"
 
 ##
@@ -59,15 +71,6 @@ name = "monitoring"
 server = "coordinator"
 run_directory = "coordinator/monitoring"
 file_paths = ["docker-compose.yml"]
-repo = "Hugo-Persson/HomeLab"
-
-[[stack]]
-name = "adguard"
-[stack.config]
-server = "coordinator"
-run_directory = "coordinator/adguard"
-git_account = "hugo-persson"
-file_paths = ["compose.yaml"]
 repo = "Hugo-Persson/HomeLab"
 
 ##
@@ -132,7 +135,7 @@ name = "deploy-on-push"
 name = "Stage"
 enabled = true
 executions = [
-  { execution.type = "BatchDeployStack", execution.params.pattern = "dashy", enabled = true },
+  { execution.type = "BatchDeployStack", execution.params.pattern = "dashy", enabled = true }
 ]
 
 ##
@@ -144,14 +147,14 @@ name = "update-traefik-multi-host"
 name = "Stage"
 enabled = true
 executions = [
-  { execution.type = "RunBuild", execution.params.build = "multi-host-config-provider", enabled = true },
+  { execution.type = "RunBuild", execution.params.build = "multi-host-config-provider", enabled = true }
 ]
 
 [[procedure.config.stage]]
 name = "Stage"
 enabled = true
 executions = [
-  { execution.type = "DeployStack", execution.params.stack = "multi-host-config-provider", enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "multi-host-config-provider", enabled = true }
 ]
 
 ##
@@ -174,7 +177,10 @@ name = "discord_notify"
 enabled = true
 endpoint.type = "Discord"
 endpoint.params.url = "https://discord.com/api/webhooks/1311198230566142022/s9vW7Maw9CXPdmE029YwL8Bc_gcyMN_Vlb3hyPtW6FtQjBBXO5NdeIfCZVFbh0oQ-Hte"
-alert_types = ["StackStateChange", "ContainerStateChange"]
+alert_types = [
+  "StackStateChange",
+  "ContainerStateChange"
+]
 
 ##
 
@@ -193,4 +199,3 @@ repo = "hugo-persson/homelab-komodo-resources"
 git_account = "hugo-persson"
 resource_path = ["default.toml"]
 managed = true
-
