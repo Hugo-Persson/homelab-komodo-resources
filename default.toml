@@ -116,6 +116,19 @@ repo = "Hugo-Persson/traefik-multi-host-mapper"
 image_registry.domain = "ghcr.io"
 image_registry.account = "hugo-persson"
 
+
+## public_server
+
+[[stack]]
+name = "mediastack"
+[stack.config]
+server = "public_server"
+run_directory = "./public-server/mediastack"
+file_paths = ["docker-compose.yaml"]
+git_account = "hugo-persson"
+repo = "hugo-persson/homelab"
+
+
 ##
 
 [[repo]]
