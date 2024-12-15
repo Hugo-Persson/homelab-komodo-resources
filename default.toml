@@ -89,6 +89,10 @@ server = "coordinator"
 run_directory = "coordinator/monitoring"
 file_paths = ["docker-compose.yml"]
 repo = "Hugo-Persson/HomeLab"
+environment = """
+  # VARIABLE = value
+BASE_PATH=/home/hugo/HomeLab/coordinator/monitoring
+"""
 
 ##
 
