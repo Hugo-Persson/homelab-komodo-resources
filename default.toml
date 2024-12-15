@@ -42,6 +42,16 @@ repo = "Hugo-Persson/HomeLab"
 
 ##
 
+[[stack]]
+name = "dashy"
+[stack.config]
+server = "coordinator"
+run_directory = "coordinator/dashy"
+file_paths = ["docker-compose.yml"]
+git_account = "hugo-persson"
+repo = "Hugo-Persson/HomeLab"
+
+##
 
 [[stack]]
 name = "komodo"
@@ -60,18 +70,6 @@ server = "coordinator"
 run_directory = "coordinator/monitoring"
 file_paths = ["docker-compose.yml"]
 repo = "Hugo-Persson/HomeLab"
-
-#
-
-
-[[stack]]
-name = "dashy"
-[stack.config]
-server = "coordinator"
-run_directory = "coordinator/dashy"
-git_account = "hugo-persson"
-repo = "Hugo-Persson/HomeLab"
-file_paths = ["docker-compose.yml"]
 
 ##
 
@@ -135,7 +133,7 @@ name = "deploy-on-push"
 name = "Stage"
 enabled = true
 executions = [
-  { execution.type = "BatchDeployStack", execution.params.pattern = "dashy", enabled = true },
+  { execution.type = "BatchDeployStack", execution.params.pattern = "dashy", enabled = true }
 ]
 
 ##
@@ -147,14 +145,14 @@ name = "update-traefik-multi-host"
 name = "Stage"
 enabled = true
 executions = [
-  { execution.type = "RunBuild", execution.params.build = "multi-host-config-provider", enabled = true },
+  { execution.type = "RunBuild", execution.params.build = "multi-host-config-provider", enabled = true }
 ]
 
 [[procedure.config.stage]]
 name = "Stage"
 enabled = true
 executions = [
-  { execution.type = "DeployStack", execution.params.stack = "multi-host-config-provider", enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "multi-host-config-provider", enabled = true }
 ]
 
 ##
@@ -177,7 +175,10 @@ name = "discord_notify"
 enabled = true
 endpoint.type = "Discord"
 endpoint.params.url = "https://discord.com/api/webhooks/1311198230566142022/s9vW7Maw9CXPdmE029YwL8Bc_gcyMN_Vlb3hyPtW6FtQjBBXO5NdeIfCZVFbh0oQ-Hte"
-alert_types = ["StackStateChange", "ContainerStateChange"]
+alert_types = [
+  "StackStateChange",
+  "ContainerStateChange"
+]
 
 ##
 
@@ -192,7 +193,7 @@ params = {}
 [[resource_sync]]
 name = "homelab-repo"
 [resource_sync.config]
-repo = "hugo-persson/homelab"
+repo = "hugo-persson/homelab-komodo-resources"
 git_account = "hugo-persson"
-resource_path = ["coordinator/komodo/resources/default.toml"]
+resource_path = ["default.toml"]
 managed = true
