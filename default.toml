@@ -1,0 +1,198 @@
+[[server]]
+name = "coordinator"
+[server.config]
+address = "https://periphery:8120"
+enabled = true
+
+##
+
+[[server]]
+name = "public_server"
+[server.config]
+address = "https://192.168.50.6:8120"
+enabled = true
+
+##
+
+[[server]]
+name = "secure_server"
+[server.config]
+address = "https://192.168.50.10:8120"
+enabled = true
+
+##
+
+[[stack]]
+name = "adguard"
+[stack.config]
+server = "coordinator"
+run_directory = "coordinator/adguard"
+file_paths = ["compose.yaml"]
+repo = "Hugo-Persson/HomeLab"
+
+##
+
+[[stack]]
+name = "authelia"
+[stack.config]
+server = "coordinator"
+run_directory = "coordinator/authelia"
+file_paths = ["docker-compose.yml"]
+repo = "Hugo-Persson/HomeLab"
+
+##
+
+
+[[stack]]
+name = "komodo"
+[stack.config]
+server = "coordinator"
+run_directory = "coordinator/komodo"
+file_paths = ["docker-compose.yml"]
+repo = "Hugo-Persson/HomeLab"
+
+##
+
+[[stack]]
+name = "monitoring"
+[stack.config]
+server = "coordinator"
+run_directory = "coordinator/monitoring"
+file_paths = ["docker-compose.yml"]
+repo = "Hugo-Persson/HomeLab"
+
+#
+
+
+[[stack]]
+name = "dashy"
+[stack.config]
+server = "coordinator"
+run_directory = "coordinator/dashy"
+git_account = "hugo-persson"
+repo = "Hugo-Persson/HomeLab"
+file_paths = ["docker-compose.yml"]
+
+##
+
+[[stack]]
+name = "multi-host-config-provider"
+[stack.config]
+server = "coordinator"
+run_directory = "coordinator/multi-host-mapper"
+git_account = "hugo-persson"
+repo = "Hugo-Persson/HomeLab"
+webhook_enabled = false
+environment = """
+DISCORD_WEBHOOK=https://discord.com/api/webhooks/1311198230566142022/s9vW7Maw9CXPdmE029YwL8Bc_gcyMN_Vlb3hyPtW6FtQjBBXO5NdeIfCZVFbh0oQ-Hte
+"""
+
+##
+
+[[stack]]
+name = "traefik"
+[stack.config]
+server = "coordinator"
+run_directory = "./coordinator/traefik"
+file_paths = ["docker-compose.yml"]
+git_account = "hugo-persson"
+repo = "hugo-persson/homelab"
+
+##
+
+[[stack]]
+name = "wireguard"
+[stack.config]
+server = "coordinator"
+run_directory = "coordinator/wireguard"
+file_paths = ["docker-compose.yaml"]
+repo = "Hugo-Persson/HomeLab"
+
+##
+
+[[build]]
+name = "multi-host-config-provider"
+[build.config]
+builder = "local"
+git_account = "hugo-persson"
+repo = "Hugo-Persson/traefik-multi-host-mapper"
+image_registry.domain = "ghcr.io"
+image_registry.account = "hugo-persson"
+
+##
+
+[[repo]]
+name = "homelab"
+[repo.config]
+
+
+##
+
+[[procedure]]
+name = "deploy-on-push"
+
+[[procedure.config.stage]]
+name = "Stage"
+enabled = true
+executions = [
+  { execution.type = "BatchDeployStack", execution.params.pattern = "dashy", enabled = true },
+]
+
+##
+
+[[procedure]]
+name = "update-traefik-multi-host"
+
+[[procedure.config.stage]]
+name = "Stage"
+enabled = true
+executions = [
+  { execution.type = "RunBuild", execution.params.build = "multi-host-config-provider", enabled = true },
+]
+
+[[procedure.config.stage]]
+name = "Stage"
+enabled = true
+executions = [
+  { execution.type = "DeployStack", execution.params.stack = "multi-host-config-provider", enabled = true },
+]
+
+##
+
+[[action]]
+name = "deploy-on-push"
+[action.config]
+file_contents = """
+// Run actions using the pre initialized 'komodo' client.
+const version: Types.GetVersionResponse = await komodo.read('GetVersion', {});
+console.log('🦎 Komodo version:', version.version, '🦎
+');
+"""
+
+##
+
+[[alerter]]
+name = "discord_notify"
+[alerter.config]
+enabled = true
+endpoint.type = "Discord"
+endpoint.params.url = "https://discord.com/api/webhooks/1311198230566142022/s9vW7Maw9CXPdmE029YwL8Bc_gcyMN_Vlb3hyPtW6FtQjBBXO5NdeIfCZVFbh0oQ-Hte"
+alert_types = ["StackStateChange", "ContainerStateChange"]
+
+##
+
+[[builder]]
+name = "local"
+[builder.config]
+type = "Server"
+params = {}
+
+##
+
+[[resource_sync]]
+name = "homelab-repo"
+[resource_sync.config]
+repo = "hugo-persson/homelab"
+git_account = "hugo-persson"
+resource_path = ["coordinator/komodo/resources/default.toml"]
+managed = true
