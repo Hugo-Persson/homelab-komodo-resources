@@ -78,6 +78,14 @@ environment = """
 TZ=[[TZ]]
 JELLYSTAT_DB_PASSWORD=[[JELLYSTAT_DB_PASSWORD]]
 JELLYSTAT_JWT_SECRET=[[JELLYSTAT_JWT_SECRET]]
+SONARR_API_KEY=[[SONARR_API_KEY]]
+RADARR_API_KEY=[[RADARR_API_KEY]]
+JANITORR_JELLYFIN_API_KEY=[[JANITORR_JELLYFIN_API_KEY]]
+JANITORR_JELLYFIN_PASSWORD = [[JANITORR_JELLYFIN_PASSWORD]]
+JELLYSEERR_API_KEY = [[JELLYSEERR_API_KEY]]
+BAZARR_API_KEY = [[BAZARR_API_KEY]]
+JANITORR_JELLYSTAT_API_KEY = [[JANITORR_JELLYSTAT_API_KEY]]
+
 """
 
 ##
@@ -157,7 +165,7 @@ name = "deploy-on-push"
 name = "Stage"
 enabled = true
 executions = [
-  { execution.type = "BatchDeployStack", execution.params.pattern = "dashy", enabled = true }
+  { execution.type = "BatchDeployStack", execution.params.pattern = "mediastack", enabled = true }
 ]
 
 ##
