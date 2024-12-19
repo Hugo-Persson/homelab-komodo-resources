@@ -22,6 +22,27 @@ enabled = true
 
 ##
 
+
+[[stack]]
+name = "authentik"
+[stack.config]
+server = "coordinator"
+run_directory = "./coordinator/authentik"
+file_paths = ["docker-compose.yml"]
+git_account = "hugo-persson"
+repo = "hugo-persson/homelab"
+environment = """
+PG_PASS=[[AUTHENTIK_PG_PASS]]
+AUTHENTIK_SECRET_KEY=[[AUTHENTIK_SECRET_KEY]]
+SMTP_HOST = [[SMTP_HOST]]
+SMTP_PORT = [[SMTP_PORT]]
+SMTP_USER = [[SMTP_USER]]
+SMTP_PASS = [[SMTP_PASS]]
+"""
+
+
+##
+
 [[stack]]
 name = "adguard"
 [stack.config]
@@ -165,7 +186,7 @@ name = "deploy-on-push"
 name = "Stage"
 enabled = true
 executions = [
-  { execution.type = "BatchDeployStack", execution.params.pattern = "mediastack", enabled = true }
+  { execution.type = "BatchDeployStack", execution.params.pattern = "mediastack", enabled = true },
 ]
 
 ##
@@ -177,14 +198,14 @@ name = "update-traefik-multi-host"
 name = "Stage"
 enabled = true
 executions = [
-  { execution.type = "RunBuild", execution.params.build = "multi-host-config-provider", enabled = true }
+  { execution.type = "RunBuild", execution.params.build = "multi-host-config-provider", enabled = true },
 ]
 
 [[procedure.config.stage]]
 name = "Stage"
 enabled = true
 executions = [
-  { execution.type = "DeployStack", execution.params.stack = "multi-host-config-provider", enabled = true }
+  { execution.type = "DeployStack", execution.params.stack = "multi-host-config-provider", enabled = true },
 ]
 
 ##
@@ -207,10 +228,7 @@ name = "discord_notify"
 enabled = true
 endpoint.type = "Discord"
 endpoint.params.url = "https://discord.com/api/webhooks/1311198230566142022/s9vW7Maw9CXPdmE029YwL8Bc_gcyMN_Vlb3hyPtW6FtQjBBXO5NdeIfCZVFbh0oQ-Hte"
-alert_types = [
-  "StackStateChange",
-  "ContainerStateChange"
-]
+alert_types = ["StackStateChange", "ContainerStateChange"]
 
 ##
 
@@ -229,3 +247,4 @@ repo = "hugo-persson/homelab-komodo-resources"
 git_account = "hugo-persson"
 resource_path = ["default.toml"]
 managed = true
+
