@@ -15,3 +15,4 @@ Set `githooks` as hooks:
 git config core.hooksPath githooks
 ```
 
+Done 👏
