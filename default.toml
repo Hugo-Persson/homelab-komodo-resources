@@ -22,27 +22,6 @@ enabled = true
 
 ##
 
-
-[[stack]]
-name = "authentik"
-[stack.config]
-server = "coordinator"
-run_directory = "./coordinator/authentik"
-file_paths = ["docker-compose.yml"]
-git_account = "hugo-persson"
-repo = "hugo-persson/homelab"
-environment = """
-PG_PASS=[[AUTHENTIK_PG_PASS]]
-AUTHENTIK_SECRET_KEY=[[AUTHENTIK_SECRET_KEY]]
-SMTP_HOST = [[SMTP_HOST]]
-SMTP_PORT = [[SMTP_PORT]]
-SMTP_USER = [[SMTP_USER]]
-SMTP_PASS = [[SMTP_PASS]]
-"""
-
-
-##
-
 [[stack]]
 name = "adguard"
 [stack.config]
@@ -62,6 +41,25 @@ run_directory = "coordinator/authelia"
 file_paths = ["docker-compose.yml"]
 git_account = "hugo-persson"
 repo = "Hugo-Persson/HomeLab"
+
+##
+
+[[stack]]
+name = "authentik"
+[stack.config]
+server = "coordinator"
+run_directory = "./coordinator/authentik"
+file_paths = ["docker-compose.yml"]
+git_account = "hugo-persson"
+repo = "hugo-persson/homelab"
+environment = """
+PG_PASS=[[AUTHENTIK_PG_PASS]]
+AUTHENTIK_SECRET_KEY=[[AUTHENTIK_SECRET_KEY]]
+SMTP_HOST = [[SMTP_HOST]]
+SMTP_PORT = [[SMTP_PORT]]
+SMTP_USER = [[SMTP_USER]]
+SMTP_PASS = [[SMTP_PASS]]
+"""
 
 ##
 
@@ -161,64 +159,16 @@ repo = "Hugo-Persson/HomeLab"
 
 ##
 
-[[build]]
-name = "multi-host-config-provider"
-[build.config]
-builder = "local"
-git_account = "hugo-persson"
-repo = "Hugo-Persson/traefik-multi-host-mapper"
-image_registry.domain = "ghcr.io"
-image_registry.account = "hugo-persson"
-
-##
-
-[[repo]]
-name = "homelab"
-[repo.config]
-
-
-##
-
 [[procedure]]
-name = "deploy-on-push"
+name = "deploy-multi-host"
 
 [[procedure.config.stage]]
 name = "Stage"
 enabled = true
 executions = [
-  { execution.type = "BatchDeployStack", execution.params.pattern = "mediastack", enabled = true },
+  { execution.type = "PullStack", execution.params.stack = "multi-host-config-provider", enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "multi-host-config-provider", enabled = true }
 ]
-
-##
-
-[[procedure]]
-name = "update-traefik-multi-host"
-
-[[procedure.config.stage]]
-name = "Stage"
-enabled = true
-executions = [
-  { execution.type = "RunBuild", execution.params.build = "multi-host-config-provider", enabled = true },
-]
-
-[[procedure.config.stage]]
-name = "Stage"
-enabled = true
-executions = [
-  { execution.type = "DeployStack", execution.params.stack = "multi-host-config-provider", enabled = true },
-]
-
-##
-
-[[action]]
-name = "deploy-on-push"
-[action.config]
-file_contents = """
-// Run actions using the pre initialized 'komodo' client.
-const version: Types.GetVersionResponse = await komodo.read('GetVersion', {});
-console.log('🦎 Komodo version:', version.version, '🦎
-');
-"""
 
 ##
 
@@ -228,7 +178,10 @@ name = "discord_notify"
 enabled = true
 endpoint.type = "Discord"
 endpoint.params.url = "https://discord.com/api/webhooks/1311198230566142022/s9vW7Maw9CXPdmE029YwL8Bc_gcyMN_Vlb3hyPtW6FtQjBBXO5NdeIfCZVFbh0oQ-Hte"
-alert_types = ["StackStateChange", "ContainerStateChange"]
+alert_types = [
+  "StackStateChange",
+  "ContainerStateChange"
+]
 
 ##
 
@@ -236,7 +189,7 @@ alert_types = ["StackStateChange", "ContainerStateChange"]
 name = "local"
 [builder.config]
 type = "Server"
-params = {}
+params.server_id = "coordinator"
 
 ##
 
@@ -247,4 +200,3 @@ repo = "hugo-persson/homelab-komodo-resources"
 git_account = "hugo-persson"
 resource_path = ["default.toml"]
 managed = true
-
