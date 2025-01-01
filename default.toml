@@ -118,6 +118,15 @@ git_account = "hugo-persson"
 repo = "hugo-persson/homelab"
 
 
+[[stack]]
+name = "tandoor"
+[stack.config]
+server = "public_server"
+run_directory = "./public-server/tandoor"
+file_paths = ["docker-compose.yml"]
+git_account = "hugo-persson"
+repo = "hugo-persson/homelab"
+
 ##
 
 [[stack]]
@@ -208,4 +217,3 @@ repo = "hugo-persson/homelab-komodo-resources"
 git_account = "hugo-persson"
 resource_path = ["default.toml"]
 managed = true
-
