@@ -20,6 +20,19 @@ name = "secure_server"
 address = "https://192.168.50.10:8120"
 enabled = true
 
+
+[[stack]]
+name = "immich"
+[stack.config]
+server = "public_server"
+run_directory = "secure/immich"
+file_paths = ["docker-compose.yml"]
+git_account = "hugo-persson"
+repo = "Hugo-Persson/HomeLab"
+
+environment = """
+DB_PASSWORD=[[IMMICH_DB_PASSWORD]]
+"""
 ##
 
 [[stack]]
