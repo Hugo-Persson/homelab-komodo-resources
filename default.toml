@@ -120,26 +120,6 @@ JANITORR_JELLYSTAT_API_KEY = [[JANITORR_JELLYSTAT_API_KEY]]
 
 """
 
-
-[[stack]]
-name = "pinchflat"
-[stack.config]
-server = "public_server"
-run_directory = "./public-server/youtube-pinchflat"
-file_paths = ["docker-compose.yml"]
-git_account = "hugo-persson"
-repo = "hugo-persson/homelab"
-
-
-[[stack]]
-name = "tandoor"
-[stack.config]
-server = "public_server"
-run_directory = "./public-server/tandoor"
-file_paths = ["docker-compose.yml"]
-git_account = "hugo-persson"
-repo = "hugo-persson/homelab"
-
 ##
 
 [[stack]]
@@ -167,6 +147,34 @@ repo = "Hugo-Persson/HomeLab"
 webhook_enabled = false
 environment = """
 DISCORD_WEBHOOK=https://discord.com/api/webhooks/1311198230566142022/s9vW7Maw9CXPdmE029YwL8Bc_gcyMN_Vlb3hyPtW6FtQjBBXO5NdeIfCZVFbh0oQ-Hte
+"""
+
+##
+
+[[stack]]
+name = "pinchflat"
+[stack.config]
+server = "public_server"
+run_directory = "./public-server/youtube-pinchflat"
+file_paths = ["docker-compose.yml"]
+git_account = "hugo-persson"
+repo = "hugo-persson/homelab"
+
+##
+
+[[stack]]
+name = "tandoor"
+[stack.config]
+server = "public_server"
+run_directory = "public-server/tandoor"
+file_paths = ["docker-compose.yml"]
+env_file_path = "secrets.env"
+git_account = "hugo-persson"
+repo = "hugo-persson/homelab"
+environment = """
+  # VARIABLE = value
+SOCIALACCOUNT_PROVIDERS={ "openid_connect": { "SERVERS": [{ "id": "authentik", "name": "Authentik", "server_url": "https://authentik.evercode.se/application/o/tandoor2/.well-known/openid-configuration", "token_auth_method": "client_secret_basic", "APP": { "client_id": "[[TANDOOR_AUTHENTIK_ID]]", "secret": "[[TANDOOR_AUTHENTIK_SECRET]]" } } ] } }
+SECRET_KEY = [[TANDOOR_SECRET_KEY]]
 """
 
 ##
@@ -200,7 +208,7 @@ name = "Stage"
 enabled = true
 executions = [
   { execution.type = "PullStack", execution.params.stack = "multi-host-config-provider", enabled = true },
-  { execution.type = "DeployStack", execution.params.stack = "multi-host-config-provider", enabled = true },
+  { execution.type = "DeployStack", execution.params.stack = "multi-host-config-provider", enabled = true }
 ]
 
 ##
@@ -211,7 +219,10 @@ name = "discord_notify"
 enabled = true
 endpoint.type = "Discord"
 endpoint.params.url = "https://discord.com/api/webhooks/1311198230566142022/s9vW7Maw9CXPdmE029YwL8Bc_gcyMN_Vlb3hyPtW6FtQjBBXO5NdeIfCZVFbh0oQ-Hte"
-alert_types = ["StackStateChange", "ContainerStateChange"]
+alert_types = [
+  "StackStateChange",
+  "ContainerStateChange"
+]
 
 ##
 
